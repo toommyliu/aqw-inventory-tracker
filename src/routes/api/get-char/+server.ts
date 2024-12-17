@@ -22,5 +22,14 @@ export const POST: RequestHandler = async ({ request }) => {
 	const ccid = Number.parseInt(ccidStr, 10);
 	if (!charIdMap.has(username)) charIdMap.set(username, ccid);
 
-	return json({ ccid });
+	let inventory: unknown[] = [];
+
+	try {
+		const resp = await axios.get(`https://account.aq.com/CharPage/Inventory?ccid=${ccid}`);
+		inventory = resp.data;
+	} catch {
+		inventory = [];
+	}
+
+	return json({ ccid, username, inventory });
 };
