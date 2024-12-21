@@ -58,7 +58,7 @@
 			onscroll={handleScroll}
 		>
 			{#each Object.entries(store.accounts) as [username, data]}
-				<Accordion.Root value="item-1" class="space-y-4">
+				<Accordion.Root class="space-y-4">
 					<Accordion.Item value={username} class="rounded-md border dark:border-gray-700">
 						<div class="w-full">
 							<Accordion.Trigger
