@@ -27,7 +27,10 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const resp = await axios.get(`https://account.aq.com/CharPage/Inventory?ccid=${ccid}`);
 		inventory = resp.data;
-	} catch {
+	} catch (error) {
+		const err = error as Error;
+		console.log(err);
+
 		inventory = [];
 	}
 

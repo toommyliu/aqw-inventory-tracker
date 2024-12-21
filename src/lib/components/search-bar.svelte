@@ -45,7 +45,7 @@
 			placeholder="Your account username..."
 			required
 			class="input input-bordered w-full"
-			on:change={(ev) => (username = ev.currentTarget.value)}
+			onchange={(ev) => (username = ev.currentTarget.value)}
 		/>
 		<Button type="submit" disabled={isLoading}>Submit</Button>
 	</form>
