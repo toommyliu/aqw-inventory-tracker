@@ -3,7 +3,7 @@
 	import { type Events, type Props, buttonVariants } from "./index.js";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = Props;
+	type $$Props = Props & { disabled?: boolean };
 	type $$Events = Events;
 
 	let className: $$Props["class"] = undefined;

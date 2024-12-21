@@ -3,7 +3,7 @@
 	import * as Accordion from '$lib/components/ui/accordion';
 	import SearchBar from '$lib/components/search-bar.svelte';
 
-	import { Plus, Minus, ArrowUpDown, RefreshCw, ArrowUp } from 'lucide-svelte';
+	import { Plus, Minus, ArrowUpDown, RefreshCw, ArrowUp, X } from 'lucide-svelte';
 	import axios from 'axios';
 	import { toast } from 'svelte-sonner';
 	import { trackInventory } from '@/track-inventory';
@@ -30,6 +30,12 @@
 		}
 	}
 
+	function removeAccount(username: string) {
+		const { [username]: removed, ...remaining } = store.accounts;
+		store.accounts = remaining;
+		toast.success("Successfully removed from list");
+	}
+
 	function handleScroll(e: Event) {
 		const target = e.target as HTMLDivElement;
 		scrollToTopVisible = target.scrollTop > 200;
@@ -41,7 +47,7 @@
 </script>
 
 <div class="container mx-auto flex flex-col items-center px-4">
-	<div class="w-full max-w-3xl">
+	<div class="w-full max-w-7xl">
 		<SearchBar />
 	</div>
 
@@ -61,7 +67,17 @@
 						<Accordion.Trigger
 							class="flex w-full items-center bg-white p-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700/50"
 						>
-							<div class="grid w-full grid-cols-[1fr,auto] items-center gap-4">
+							<div class="grid w-full grid-cols-[auto,1fr,auto] items-center gap-4">
+								<button
+									class="rounded-full p-1 text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+									onclick={(ev) => {
+										ev.stopPropagation();
+										removeAccount(username);
+									}}
+									title="Remove account"
+								>
+									<X size={16} />
+								</button>
 								<span class="truncate font-medium">{username}</span>
 								<div class="flex items-center gap-4">
 									<div class="hidden grid-cols-3 gap-2 text-sm sm:grid sm:w-64">

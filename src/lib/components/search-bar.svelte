@@ -2,21 +2,35 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
 
-	import axios from 'axios';
+	import axios, { AxiosError } from 'axios';
 	import { toast } from 'svelte-sonner';
 	import { trackInventory } from '@/track-inventory';
 
 	let username = $state<string>('');
+	let isLoading = $state<boolean>(false);
 
 	async function onsubmit(ev: SubmitEvent) {
+		isLoading = true;
+
 		ev.preventDefault();
 
 		try {
 			const resp = await axios.post('/api/get-char', { username });
 			trackInventory(username, resp.data.inventory);
 		} catch (error) {
-			console.error(error);
+			const err = error as Error;
+			if (
+				err instanceof AxiosError &&
+				err?.response?.statusText === 'Not Found' &&
+				err.response?.status === 404
+			) {
+				toast.error('Account not found.');
+				return;
+			}
+
 			toast.error('An error occured (1).');
+		} finally {
+			isLoading = false;
 		}
 	}
 </script>
@@ -33,6 +47,6 @@
 			class="input input-bordered w-full"
 			on:change={(ev) => (username = ev.currentTarget.value)}
 		/>
-		<Button type="submit">Submit</Button>
+		<Button type="submit" disabled={isLoading}>Submit</Button>
 	</form>
 </div>
