@@ -2,10 +2,10 @@
 	import { store } from '$lib/shared.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import SearchBar from '$lib/components/search-bar.svelte';
-
 	import { Plus, Minus, ArrowUpDown, RefreshCw, ArrowUp, X } from 'lucide-svelte';
-	import axios from 'axios';
 	import { toast } from 'svelte-sonner';
+
+	import axios from 'axios';
 	import { trackInventory } from '@/track-inventory';
 
 	let accordionContainer: HTMLDivElement;
@@ -33,12 +33,11 @@
 	function removeAccount(username: string) {
 		const { [username]: removed, ...remaining } = store.accounts;
 		store.accounts = remaining;
-		toast.success("Successfully removed from list");
+		toast.success('Successfully removed from list');
 	}
 
-	function handleScroll(e: Event) {
-		const target = e.target as HTMLDivElement;
-		scrollToTopVisible = target.scrollTop > 200;
+	function handleScroll(ev: Event) {
+		scrollToTopVisible = (ev.target as HTMLDivElement).scrollTop > 200;
 	}
 
 	function scrollToTop() {
@@ -59,64 +58,65 @@
 			onscroll={handleScroll}
 		>
 			{#each Object.entries(store.accounts) as [username, data]}
-				<Accordion.Root class="w-full">
-					<Accordion.Item
-						value="item-1"
-						class="overflow-hidden rounded-md border dark:border-gray-700"
-					>
-						<Accordion.Trigger
-							class="flex w-full items-center bg-white p-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700/50"
-						>
-							<div class="grid w-full grid-cols-[auto,1fr,auto] items-center gap-4">
-								<button
-									class="rounded-full p-1 text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-									onclick={(ev) => {
-										ev.stopPropagation();
-										removeAccount(username);
-									}}
-									title="Remove account"
-								>
-									<X size={16} />
-								</button>
-								<span class="truncate font-medium">{username}</span>
-								<div class="flex items-center gap-4">
-									<div class="hidden grid-cols-3 gap-2 text-sm sm:grid sm:w-64">
-										<span class="whitespace-nowrap text-green-600 dark:text-green-400"
-											>{data.newItems.length} new</span
-										>
-										<span class="whitespace-nowrap text-red-600 dark:text-red-400"
-											>{data.removedItems.length} removed</span
-										>
-										<span class="whitespace-nowrap text-blue-600 dark:text-blue-400"
-											>{data.changedCounts.length} changed</span
-										>
-									</div>
-									<div class="flex gap-2 text-sm sm:hidden">
-										<span class="text-green-600 dark:text-green-400">+{data.newItems.length}</span>
-										<span class="text-red-600 dark:text-red-400">-{data.removedItems.length}</span>
-										<span class="text-blue-600 dark:text-blue-400"
-											>~{data.changedCounts.length}</span
-										>
-									</div>
+				<Accordion.Root value="item-1" class="space-y-4">
+					<Accordion.Item value={username} class="rounded-md border dark:border-gray-700">
+						<div class="w-full">
+							<Accordion.Trigger
+								class="flex w-full items-center rounded-t-md bg-white p-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700/50"
+							>
+								<div class="grid w-full grid-cols-[auto,1fr,auto] items-center gap-4">
 									<button
-										class="rounded-full p-1 hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-700"
+										class="rounded-full p-1 text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
 										onclick={(ev) => {
 											ev.stopPropagation();
-											refreshInventory(username);
+											removeAccount(username);
 										}}
-										title="Refresh inventory"
-										disabled={store.isLoading[username]}
+										title="Remove account"
 									>
-										<RefreshCw
-											size={16}
-											class="text-gray-500 dark:text-gray-400 {store.isLoading[username]
-												? 'animate-spin'
-												: ''}"
-										/>
+										<X size={16} />
 									</button>
+									<span class="truncate font-medium">{username}</span>
+									<div class="flex items-center gap-4">
+										<div class="hidden grid-cols-3 gap-2 text-sm sm:grid sm:w-64">
+											<span class="whitespace-nowrap text-green-600 dark:text-green-400"
+												>{data.newItems.length} new</span
+											>
+											<span class="whitespace-nowrap text-red-600 dark:text-red-400"
+												>{data.removedItems.length} removed</span
+											>
+											<span class="whitespace-nowrap text-blue-600 dark:text-blue-400"
+												>{data.changedCounts.length} changed</span
+											>
+										</div>
+										<div class="flex gap-2 text-sm sm:hidden">
+											<span class="text-green-600 dark:text-green-400">+{data.newItems.length}</span
+											>
+											<span class="text-red-600 dark:text-red-400">-{data.removedItems.length}</span
+											>
+											<span class="text-blue-600 dark:text-blue-400"
+												>~{data.changedCounts.length}</span
+											>
+										</div>
+										<button
+											class="rounded-full p-1 hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-700"
+											onclick={(ev) => {
+												ev.stopPropagation();
+												refreshInventory(username);
+											}}
+											title="Refresh inventory"
+											disabled={store.isLoading[username]}
+										>
+											<RefreshCw
+												size={16}
+												class="text-gray-500 dark:text-gray-400 {store.isLoading[username]
+													? 'animate-spin'
+													: ''}"
+											/>
+										</button>
+									</div>
 								</div>
-							</div>
-						</Accordion.Trigger>
+							</Accordion.Trigger>
+						</div>
 						<Accordion.Content
 							class="border-t bg-white p-4 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 						>
