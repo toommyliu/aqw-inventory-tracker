@@ -2,8 +2,6 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
 
-	import { store } from '$lib/shared.svelte';
-
 	import axios from 'axios';
 	import { toast } from 'svelte-sonner';
 	import { trackInventory } from '@/track-inventory';
