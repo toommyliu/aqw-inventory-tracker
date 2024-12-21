@@ -8,8 +8,6 @@
 	import { toast } from 'svelte-sonner';
 	import { trackInventory } from '@/track-inventory';
 
-	import { store } from '$lib/shared.svelte';
-
 	let accordionContainer: HTMLDivElement;
 	let scrollToTopVisible = $state(false);
 
