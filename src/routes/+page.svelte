@@ -2,12 +2,13 @@
 	import { store } from '$lib/shared.svelte';
 	import * as Accordion from '$lib/components/ui/accordion';
 	import SearchBar from '$lib/components/search-bar.svelte';
-	import { Plus, Minus, ArrowUpDown, RefreshCw, ArrowUp, X } from 'lucide-svelte';
+	import { Plus, Minus, ArrowUpDown, RefreshCw, ArrowUp, X, Loader2 } from 'lucide-svelte';
 	import { toast } from 'svelte-sonner';
 
 	import axios from 'axios';
 	import { trackInventory } from '@/track-inventory';
 
+	// svelte-ignore non_reactive_update we don't need to use state for this
 	let accordionContainer: HTMLDivElement;
 	let scrollToTopVisible = $state(false);
 
@@ -58,13 +59,13 @@
 			onscroll={handleScroll}
 		>
 			{#each Object.entries(store.accounts) as [username, data]}
-				<Accordion.Root value="item-1" class="space-y-4">
+				<Accordion.Root type="single" class="space-y-4">
 					<Accordion.Item value={username} class="rounded-md border dark:border-gray-700">
 						<div class="w-full">
 							<Accordion.Trigger
 								class="flex w-full items-center rounded-t-md bg-white p-4 hover:bg-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700/50"
 							>
-								<div class="grid w-full grid-cols-[auto,1fr,auto] items-center gap-4">
+								<div class="grid w-full grid-cols-[auto,auto,1fr,auto] items-center gap-4">
 									<button
 										class="rounded-full p-1 text-red-500 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
 										onclick={(ev) => {
@@ -76,7 +77,7 @@
 										<X size={16} />
 									</button>
 									<span class="truncate font-medium">{username}</span>
-									<div class="flex items-center gap-4">
+									<div class="flex items-center justify-center gap-4">
 										<div class="hidden grid-cols-3 gap-2 text-sm sm:grid sm:w-64">
 											<span class="whitespace-nowrap text-green-600 dark:text-green-400"
 												>{data.newItems.length} new</span
@@ -97,6 +98,8 @@
 												>~{data.changedCounts.length}</span
 											>
 										</div>
+									</div>
+									<div class="flex-shrink-0">
 										<button
 											class="rounded-full p-1 hover:bg-gray-100 disabled:opacity-50 dark:hover:bg-gray-700"
 											onclick={(ev) => {
@@ -106,12 +109,11 @@
 											title="Refresh inventory"
 											disabled={store.isLoading[username]}
 										>
-											<RefreshCw
-												size={16}
-												class="text-gray-500 dark:text-gray-400 {store.isLoading[username]
-													? 'animate-spin'
-													: ''}"
-											/>
+											{#if store.isLoading[username]}
+												<Loader2 size={16} class="animate-spin text-gray-500 dark:text-gray-400" />
+											{:else}
+												<RefreshCw size={16} class="text-gray-500 dark:text-gray-400" />
+											{/if}
 										</button>
 									</div>
 								</div>
