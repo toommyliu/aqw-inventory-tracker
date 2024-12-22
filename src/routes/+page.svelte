@@ -7,6 +7,7 @@
 
 	import axios from 'axios';
 	import { trackInventory } from '@/track-inventory';
+	import { getClassRank } from '@/utils/get-class-rank';
 
 	// svelte-ignore non_reactive_update we don't need to use state for this
 	let accordionContainer: HTMLDivElement;
@@ -208,7 +209,11 @@
 											class="flex items-center justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-700"
 										>
 											<span class="truncate">{item.strName}</span>
-											<span class="flex-shrink-0">{item.intCount}</span>
+											<span class="flex-shrink-0"
+												>{item.strType === 'Class'
+													? `Rank ${getClassRank(item.intCount)}`
+													: item.intCount}</span
+											>
 										</div>
 									{/each}
 								</div>
