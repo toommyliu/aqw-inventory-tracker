@@ -8,7 +8,6 @@
 	import axios from 'axios';
 	import { trackInventory } from '@/track-inventory';
 	import { getClassRank } from '@/utils/get-class-rank';
-
 	import type { Item } from '@/types';
 
 	// svelte-ignore non_reactive_update we don't need to use state for this
@@ -22,6 +21,10 @@
 	function getCountDiff(oldCount: number, newCount: number): string {
 		const diff = newCount - oldCount;
 		return diff > 0 ? `+${diff}` : diff.toString();
+	}
+
+	function getWikiUrl(itemName: string): string {
+		return `http://aqwwiki.wikidot.com/${itemName.toLowerCase().replace(/\s+/g, '-')}`;
 	}
 
 	async function refreshInventory(username: string) {
@@ -147,7 +150,15 @@
 														class="flex-shrink-0 text-blue-600 dark:text-blue-400"
 													/>
 													<div class="min-w-0 flex-1">
-														<span class="truncate">{item.strName}</span>
+														<a
+															href={getWikiUrl(item.strName)}
+															target="_blank"
+															rel="noopener noreferrer"
+															class="inline-flex items-center gap-1 hover:underline"
+															onclick={(e) => e.stopPropagation()}
+														>
+															<span class="truncate">{item.strName}</span>
+														</a>
 														<span class="text-sm text-gray-500 dark:text-gray-400">
 															· {item.strType}</span
 														>
@@ -185,7 +196,15 @@
 														class="flex-shrink-0 text-green-600 dark:text-green-400"
 													/>
 													<div class="min-w-0 flex-1">
-														<span class="truncate">{item.strName}</span>
+														<a
+															href={getWikiUrl(item.strName)}
+															target="_blank"
+															rel="noopener noreferrer"
+															class="inline-flex items-center gap-1 hover:underline"
+															onclick={(e) => e.stopPropagation()}
+														>
+															<span class="truncate">{item.strName}</span>
+														</a>
 														<span class="text-sm text-gray-500 dark:text-gray-400">
 															· {item.strType}</span
 														>
@@ -209,7 +228,15 @@
 												<div class="flex min-w-0 flex-1 items-center gap-2">
 													<Minus size={16} class="flex-shrink-0 text-red-600 dark:text-red-400" />
 													<div class="min-w-0 flex-1">
-														<span class="truncate">{item.strName}</span>
+														<a
+															href={getWikiUrl(item.strName)}
+															target="_blank"
+															rel="noopener noreferrer"
+															class="inline-flex items-center gap-1 hover:underline"
+															onclick={(e) => e.stopPropagation()}
+														>
+															<span class="truncate">{item.strName}</span>
+														</a>
 														<span class="text-sm text-gray-500 dark:text-gray-400">
 															· {item.strType}</span
 														>
@@ -230,7 +257,15 @@
 											class="flex items-center justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-700"
 										>
 											<div class="min-w-0 flex-1">
-												<span class="truncate">{item.strName}</span>
+												<a
+													href={getWikiUrl(item.strName)}
+													target="_blank"
+													rel="noopener noreferrer"
+													class="inline-flex items-center gap-1 hover:underline"
+													onclick={(e) => e.stopPropagation()}
+												>
+													<span class="truncate">{item.strName}</span>
+												</a>
 												<span class="text-sm text-gray-500 dark:text-gray-400">
 													· {item.strType}</span
 												>
