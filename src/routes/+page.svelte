@@ -9,9 +9,15 @@
 	import { trackInventory } from '@/track-inventory';
 	import { getClassRank } from '@/utils/get-class-rank';
 
+	import type { Item } from '@/types';
+
 	// svelte-ignore non_reactive_update we don't need to use state for this
 	let accordionContainer: HTMLDivElement;
 	let scrollToTopVisible = $state(false);
+
+	function sortItems(items: Item[]): Item[] {
+		return [...items].sort((a, b) => a.sortOrder - b.sortOrder);
+	}
 
 	function getCountDiff(oldCount: number, newCount: number): string {
 		const diff = newCount - oldCount;
@@ -129,18 +135,23 @@
 										Changed Quantities
 									</h3>
 									<div class="space-y-2">
-										{#each data.changedCounts as item}
+										{#each sortItems(data.changedCounts) as item}
 											{@const oldItem = data.ogInventory.find((i) => i.strName === item.strName)}
 											{@const diff = oldItem ? getCountDiff(oldItem.intCount, item.intCount) : '0'}
 											<div
 												class="flex items-center justify-between rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20"
 											>
-												<div class="flex min-w-0 items-center gap-2">
+												<div class="flex min-w-0 flex-1 items-center gap-2">
 													<ArrowUpDown
 														size={16}
 														class="flex-shrink-0 text-blue-600 dark:text-blue-400"
 													/>
-													<span class="truncate">{item.strName}</span>
+													<div class="min-w-0 flex-1">
+														<span class="truncate">{item.strName}</span>
+														<span class="text-sm text-gray-500 dark:text-gray-400">
+															· {item.strType}</span
+														>
+													</div>
 												</div>
 												<div class="flex flex-shrink-0 items-center gap-2">
 													<span class="text-gray-500 dark:text-gray-400">{oldItem?.intCount}</span>
@@ -164,16 +175,21 @@
 								<div class="mb-4">
 									<h3 class="mb-2 font-semibold text-green-600 dark:text-green-400">New Items</h3>
 									<div class="space-y-2">
-										{#each data.newItems as item}
+										{#each sortItems(data.newItems) as item}
 											<div
 												class="flex items-center justify-between rounded-lg bg-green-50 p-2 dark:bg-green-900/20"
 											>
-												<div class="flex min-w-0 items-center gap-2">
+												<div class="flex min-w-0 flex-1 items-center gap-2">
 													<Plus
 														size={16}
 														class="flex-shrink-0 text-green-600 dark:text-green-400"
 													/>
-													<span class="truncate">{item.strName}</span>
+													<div class="min-w-0 flex-1">
+														<span class="truncate">{item.strName}</span>
+														<span class="text-sm text-gray-500 dark:text-gray-400">
+															· {item.strType}</span
+														>
+													</div>
 												</div>
 												<span class="flex-shrink-0">{item.intCount}</span>
 											</div>
@@ -186,13 +202,18 @@
 								<div class="mb-4">
 									<h3 class="mb-2 font-semibold text-red-600 dark:text-red-400">Removed Items</h3>
 									<div class="space-y-2">
-										{#each data.removedItems as item}
+										{#each sortItems(data.removedItems) as item}
 											<div
 												class="flex items-center justify-between rounded-lg bg-red-50 p-2 dark:bg-red-900/20"
 											>
-												<div class="flex min-w-0 items-center gap-2">
+												<div class="flex min-w-0 flex-1 items-center gap-2">
 													<Minus size={16} class="flex-shrink-0 text-red-600 dark:text-red-400" />
-													<span class="truncate">{item.strName}</span>
+													<div class="min-w-0 flex-1">
+														<span class="truncate">{item.strName}</span>
+														<span class="text-sm text-gray-500 dark:text-gray-400">
+															· {item.strType}</span
+														>
+													</div>
 												</div>
 												<span class="flex-shrink-0">{item.intCount}</span>
 											</div>
@@ -204,11 +225,16 @@
 							<div>
 								<h3 class="mb-2 font-semibold dark:text-white">Current Inventory</h3>
 								<div class="space-y-2">
-									{#each data.inventory as item}
+									{#each sortItems(data.inventory) as item}
 										<div
 											class="flex items-center justify-between rounded-lg bg-gray-50 p-2 dark:bg-gray-700"
 										>
-											<span class="truncate">{item.strName}</span>
+											<div class="min-w-0 flex-1">
+												<span class="truncate">{item.strName}</span>
+												<span class="text-sm text-gray-500 dark:text-gray-400">
+													· {item.strType}</span
+												>
+											</div>
 											<span class="flex-shrink-0"
 												>{item.strType === 'Class'
 													? `Rank ${getClassRank(item.intCount)}`
